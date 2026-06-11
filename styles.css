@@ -55,7 +55,6 @@ body {
   padding: 1.5rem;
   box-shadow: 0 24px 50px rgba(15, 23, 42, 0.18);
   backdrop-filter: blur(14px);
-  animation: card-enter 0.45s ease-out;
 }
 
 .app-header {
@@ -146,7 +145,6 @@ h1 {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--bg-item);
-  animation: item-enter 0.28s ease;
   transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
 }
 
@@ -161,6 +159,12 @@ h1 {
   font-weight: 500;
 }
 
+.todo-text:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .todo-item.completed .todo-text {
   text-decoration: line-through;
   color: var(--text-muted);
@@ -168,10 +172,6 @@ h1 {
 
 .todo-item.completed {
   background: var(--bg-item-completed);
-}
-
-.todo-item.is-removing {
-  animation: item-exit 0.22s ease forwards;
 }
 
 .delete-btn {
@@ -187,6 +187,31 @@ h1 {
 .delete-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 14px rgba(244, 63, 94, 0.28);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .app {
+    animation: card-enter 0.45s ease-out;
+  }
+
+  .todo-item {
+    animation: item-enter 0.28s ease;
+  }
+
+  .todo-item.is-removing {
+    animation: item-exit 0.22s ease forwards;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @keyframes card-enter {

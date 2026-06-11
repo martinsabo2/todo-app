@@ -28,8 +28,20 @@ function createTodoItem(text) {
   const span = document.createElement("span");
   span.className = "todo-text";
   span.textContent = text;
-  span.addEventListener("click", () => {
+  span.tabIndex = 0;
+  span.setAttribute("role", "button");
+  span.setAttribute("aria-label", "Toggle todo completion");
+
+  const toggleCompletion = () => {
     item.classList.toggle("completed");
+  };
+
+  span.addEventListener("click", toggleCompletion);
+  span.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleCompletion();
+    }
   });
 
   const deleteButton = document.createElement("button");
@@ -38,8 +50,15 @@ function createTodoItem(text) {
   deleteButton.textContent = "Delete";
 
   deleteButton.addEventListener("click", () => {
+    const removeItem = () => {
+      if (item.isConnected) {
+        item.remove();
+      }
+    };
+
     item.classList.add("is-removing");
-    item.addEventListener("animationend", () => item.remove(), { once: true });
+    item.addEventListener("animationend", removeItem, { once: true });
+    setTimeout(removeItem, 260);
   });
 
   item.append(span, deleteButton);
