@@ -38,7 +38,8 @@ function createTodoItem(text) {
   deleteButton.textContent = "Delete";
 
   deleteButton.addEventListener("click", () => {
-    item.remove();
+    item.classList.add("is-removing");
+    item.addEventListener("animationend", () => item.remove(), { once: true });
   });
 
   item.append(span, deleteButton);
