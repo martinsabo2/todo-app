@@ -30,11 +30,19 @@ function createTodoItem(text) {
   span.textContent = text;
   span.tabIndex = 0;
   span.setAttribute("role", "button");
-  span.setAttribute("aria-label", "Toggle todo completion");
+  const updateToggleLabel = () => {
+    span.setAttribute(
+      "aria-label",
+      item.classList.contains("completed") ? "Mark as incomplete" : "Mark as complete"
+    );
+  };
 
   const toggleCompletion = () => {
     item.classList.toggle("completed");
+    updateToggleLabel();
   };
+
+  updateToggleLabel();
 
   span.addEventListener("click", toggleCompletion);
   span.addEventListener("keydown", (event) => {
@@ -51,9 +59,7 @@ function createTodoItem(text) {
 
   deleteButton.addEventListener("click", () => {
     const removeItem = () => {
-      if (item.isConnected) {
-        item.remove();
-      }
+      item.remove();
     };
 
     item.classList.add("is-removing");
