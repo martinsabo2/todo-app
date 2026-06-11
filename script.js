@@ -5,6 +5,7 @@ const themeToggle = document.getElementById("theme-toggle");
 
 const DARK = "dark";
 const LIGHT = "light";
+const EXIT_ANIMATION_MS = 0.22 * 1000;
 
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
@@ -28,8 +29,30 @@ function createTodoItem(text) {
   const span = document.createElement("span");
   span.className = "todo-text";
   span.textContent = text;
-  span.addEventListener("click", () => {
+  span.tabIndex = 0;
+  span.setAttribute("role", "button");
+  const updateToggleLabel = () => {
+    span.setAttribute(
+      "aria-label",
+      item.classList.contains("completed") ? "Mark as incomplete" : "Mark as complete"
+    );
+  };
+
+  const toggleCompletion = () => {
     item.classList.toggle("completed");
+    updateToggleLabel();
+  };
+
+  updateToggleLabel();
+
+  span.addEventListener("click", toggleCompletion);
+  span.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.code !== "Space") {
+      return;
+    }
+
+    event.preventDefault();
+    toggleCompletion();
   });
 
   const deleteButton = document.createElement("button");
@@ -38,7 +61,22 @@ function createTodoItem(text) {
   deleteButton.textContent = "Delete";
 
   deleteButton.addEventListener("click", () => {
-    item.remove();
+    const removeItem = () => {
+      item.remove();
+    };
+
+    const handleAnimationEnd = () => {
+      clearTimeout(fallbackTimer);
+      removeItem();
+    };
+
+    item.classList.add("is-removing");
+    item.addEventListener("animationend", handleAnimationEnd, { once: true });
+
+    const fallbackTimer = setTimeout(() => {
+      item.removeEventListener("animationend", handleAnimationEnd);
+      removeItem();
+    }, EXIT_ANIMATION_MS);
   });
 
   item.append(span, deleteButton);
