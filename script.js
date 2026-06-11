@@ -5,6 +5,7 @@ const themeToggle = document.getElementById("theme-toggle");
 
 const DARK = "dark";
 const LIGHT = "light";
+const EXIT_ANIMATION_MS = 220;
 
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
@@ -46,10 +47,12 @@ function createTodoItem(text) {
 
   span.addEventListener("click", toggleCompletion);
   span.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      toggleCompletion();
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
     }
+
+    event.preventDefault();
+    toggleCompletion();
   });
 
   const deleteButton = document.createElement("button");
@@ -64,7 +67,7 @@ function createTodoItem(text) {
 
     item.classList.add("is-removing");
     item.addEventListener("animationend", removeItem, { once: true });
-    setTimeout(removeItem, 260);
+    setTimeout(removeItem, EXIT_ANIMATION_MS);
   });
 
   item.append(span, deleteButton);
