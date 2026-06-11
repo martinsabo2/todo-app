@@ -65,9 +65,18 @@ function createTodoItem(text) {
       item.remove();
     };
 
+    const handleAnimationEnd = () => {
+      clearTimeout(fallbackTimer);
+      removeItem();
+    };
+
     item.classList.add("is-removing");
-    item.addEventListener("animationend", removeItem, { once: true });
-    setTimeout(removeItem, EXIT_ANIMATION_MS);
+    item.addEventListener("animationend", handleAnimationEnd, { once: true });
+
+    const fallbackTimer = setTimeout(() => {
+      item.removeEventListener("animationend", handleAnimationEnd);
+      removeItem();
+    }, EXIT_ANIMATION_MS);
   });
 
   item.append(span, deleteButton);
