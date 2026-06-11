@@ -5,7 +5,7 @@ const themeToggle = document.getElementById("theme-toggle");
 
 const DARK = "dark";
 const LIGHT = "light";
-const EXIT_ANIMATION_MS = 220;
+const EXIT_ANIMATION_MS = 0.22 * 1000;
 
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
@@ -47,7 +47,7 @@ function createTodoItem(text) {
 
   span.addEventListener("click", toggleCompletion);
   span.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") {
+    if (event.key !== "Enter" && event.code !== "Space") {
       return;
     }
 
